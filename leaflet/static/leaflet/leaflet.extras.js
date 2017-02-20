@@ -111,6 +111,11 @@ L.Map.DjangoMap = L.Map.extend({
           overlays = this.options.djoptions.overlays || [],
           continuousWorld = this.options.continuousWorld;
 
+      if (!layers || !layers.length) {
+        // No layers, we're done (ignoring overlays)
+        return;
+      }
+
       if (layers.length == 1 && overlays.length == 0) {
           var layer = l2d(layers[0]);
           // Make the only layer match the map max/min_zoom
@@ -137,13 +142,7 @@ L.Map.DjangoMap = L.Map.extend({
 
       function buildLayer(layer) {
         if(layer.options.type && layer.options.type == "WMS") {
-          return L.tileLayer.wms(layer.url, {
-              layers: layer.options.layers,
-              format: layer.options.format,
-              transparent: layer.options.transparent,
-              attribution: layer.options.attribution,
-              continuousWorld : true
-          });
+          return L.tileLayer.wms(layer.url, layer.options);
         } else {
           return L.tileLayer(layer.url, layer.options);
         }
@@ -160,7 +159,7 @@ L.Map.DjangoMap = L.Map.extend({
           return {name: l[0], url: l[1], options: options};
       }
     },
-  
+
     _djSetupControls: function () {
         // Attribution prefix ?
         if (this.attributionControl &&
