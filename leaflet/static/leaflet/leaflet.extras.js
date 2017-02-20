@@ -142,13 +142,7 @@ L.Map.DjangoMap = L.Map.extend({
 
       function buildLayer(layer) {
         if(layer.options.type && layer.options.type == "WMS") {
-          return L.tileLayer.wms(layer.url, {
-              layers: layer.options.layers,
-              format: layer.options.format,
-              transparent: layer.options.transparent,
-              attribution: layer.options.attribution,
-              continuousWorld : true
-          });
+          return L.tileLayer.wms(layer.url, layer.options);
         } else {
           return L.tileLayer(layer.url, layer.options);
         }
